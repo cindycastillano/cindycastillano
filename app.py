@@ -1,13 +1,14 @@
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, jsonify, request, render_template_string, redirect, url_for
 
 app = Flask(__name__)
 
-# ---------- Home Route ----------
+# ---------- Redirect Home to Dashboard ----------
 @app.route('/')
 def home():
-    return "Welcome to my Flask API! Visit /dashboard to see the dashboard."
+    # Redirect users directly to the dashboard
+    return redirect(url_for('dashboard'))
 
-# ---------- Student Data Route ----------
+# ---------- Student Data API ----------
 @app.route('/student', methods=['GET'])
 def get_student():
     name = request.args.get('name', 'Your Name')
@@ -20,17 +21,15 @@ def get_student():
         "section": section
     })
 
-# ---------- Dashboard Route ----------
+# ---------- Dashboard Page ----------
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
-    # Default student data
     student = {
         "name": "Your Name",
         "grade": 10,
         "section": "Zechariah"
     }
 
-    # If form submitted, update the student info
     if request.method == 'POST':
         student["name"] = request.form.get("name", student["name"])
         student["grade"] = request.form.get("grade", student["grade"])
